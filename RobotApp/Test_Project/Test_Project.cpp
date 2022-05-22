@@ -1,31 +1,32 @@
 #include "pch.h"
 #include <string>
 #include "CppUnitTest.h"
-#include "../RobotApp/Robot.cpp"
+#include "../RobotApp/Entity.cpp"
+#include "../RobotApp/Platform.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace TestProject
 {
-	TEST_CLASS(ROBOT)
+	TEST_CLASS(ENTITY)
 	{
 	public:
 		#pragma region STATUS
 		TEST_METHOD(GetOrientation)
 		{
-			Robot robot(0, 1, FacingOrientation::NORTH);
+			Entity robot(0, 1, FacingOrientation::NORTH);
 			Assert::AreEqual(int(FacingOrientation::NORTH), int(robot.GetOrientation()));
 		}
 
 		TEST_METHOD(GetPosX)
 		{
-			Robot robot(2, 1, FacingOrientation::EAST);
+			Entity robot(2, 1, FacingOrientation::EAST);
 			Assert::AreEqual(unsigned char(2), robot.GetPosX());
 		}
 
 		TEST_METHOD(GetPosY)
 		{
-			Robot robot(0, 3, FacingOrientation::WEST);
+			Entity robot(0, 3, FacingOrientation::WEST);
 			Assert::AreEqual(unsigned char(3), robot.GetPosY());
 		}
 		#pragma endregion
@@ -34,109 +35,160 @@ namespace TestProject
 		#pragma region ROTATE
 		TEST_METHOD(RotateRight)
 		{
-			Robot robot(0, 1, FacingOrientation::NORTH);
+			Entity robot(0, 1, FacingOrientation::NORTH);
 			Assert::AreEqual(int(FacingOrientation::EAST), int(robot.RotateRight()));
 		}
 
 		TEST_METHOD(RotateLeft)
 		{
-			Robot robot(2, 1, FacingOrientation::EAST);
+			Entity robot(2, 1, FacingOrientation::EAST);
 			Assert::AreEqual(int(FacingOrientation::NORTH), int(robot.RotateLeft()));
 		}
 		#pragma endregion
 
 
 		#pragma region MOVE
-		TEST_METHOD(MoveX_FWD)
+		TEST_METHOD(Move_X_FWD)
 		{
-			Robot robot(0, 3, FacingOrientation::WEST);
-			robot.MoveX();
+			Entity robot(0, 3, FacingOrientation::EAST);
+			robot.Move();
 			Assert::AreEqual(unsigned char(1), robot.GetPosX());
-			robot.MoveX();
+			robot.Move();
 			Assert::AreEqual(unsigned char(2), robot.GetPosX());
+			Assert::AreEqual(unsigned char(3), robot.GetPosY());
 		}
 
-		TEST_METHOD(MoveX_BWD)
+		TEST_METHOD(Move_X_BWD)
 		{
-			Robot robot(3, 3, FacingOrientation::WEST);
-			robot.MoveX(false);
+			Entity robot(3, 3, FacingOrientation::WEST);
+			robot.Move();
 			Assert::AreEqual(unsigned char(2), robot.GetPosX());
-			robot.MoveX(false);
+			robot.Move();
 			Assert::AreEqual(unsigned char(1), robot.GetPosX());
 		}
 
-		TEST_METHOD(MoveX_FWD_BWD)
+		TEST_METHOD(Move_X_FWD_BWD)
 		{
-			Robot robot(3, 3, FacingOrientation::WEST);
-			robot.MoveX();
+			Entity robot(3, 3, FacingOrientation::EAST);
+			robot.Move();
 			Assert::AreEqual(unsigned char(4), robot.GetPosX());
-			robot.MoveX(false);
+			robot.RotateLeft();
+			robot.RotateLeft();
+			robot.Move();
 			Assert::AreEqual(unsigned char(3), robot.GetPosX());
-			robot.MoveX(false);
+			robot.Move();
 			Assert::AreEqual(unsigned char(2), robot.GetPosX());
-			robot.MoveX();
+			robot.RotateLeft();
+			robot.RotateLeft();
+			robot.Move();
 			Assert::AreEqual(unsigned char(3), robot.GetPosX());
 		}
 
-		TEST_METHOD(MoveX_Limit_Max)
+		TEST_METHOD(Move_X_Limit_Max)
 		{
-			Robot robot(0xff, 3, FacingOrientation::WEST);
-			robot.MoveX();
+			Entity robot(0xff, 3, FacingOrientation::EAST);
+			robot.Move();
 			Assert::AreEqual(unsigned char(0), robot.GetPosX());
 		}
 
-		TEST_METHOD(MoveX_Limit_Min)
+		TEST_METHOD(Move_X_Limit_Min)
 		{
-			Robot robot(0, 3, FacingOrientation::WEST);
-			robot.MoveX(false);
+			Entity robot(0, 3, FacingOrientation::WEST);
+			robot.Move();
 			Assert::AreEqual(unsigned char(0xff), robot.GetPosX());
 		}
 
-		TEST_METHOD(MoveY_FWD)
+		TEST_METHOD(Move_Y_FWD)
 		{
-			Robot robot(0, 3, FacingOrientation::WEST);
-			robot.MoveY();
+			Entity robot(0, 3, FacingOrientation::NORTH);
+			robot.Move();
 			Assert::AreEqual(unsigned char(4), robot.GetPosY());
-			robot.MoveY();
+			robot.Move();
 			Assert::AreEqual(unsigned char(5), robot.GetPosY());
+			Assert::AreEqual(unsigned char(0), robot.GetPosX());
 		}
 
-		TEST_METHOD(MoveY_BWD)
+		TEST_METHOD(Move_Y_BWD)
 		{
-			Robot robot(3, 3, FacingOrientation::WEST);
-			robot.MoveY(false);
+			Entity robot(3, 3, FacingOrientation::SOUTH);
+			robot.Move();
 			Assert::AreEqual(unsigned char(2), robot.GetPosY());
-			robot.MoveY(false);
+			robot.Move();
 			Assert::AreEqual(unsigned char(1), robot.GetPosY());
 		}
 
-		TEST_METHOD(MoveY_FWD_BWD)
+		TEST_METHOD(Move_Y_FWD_BWD)
 		{
-			Robot robot(3, 3, FacingOrientation::WEST);
-			robot.MoveY();
+			Entity robot(3, 3, FacingOrientation::NORTH);
+			robot.Move();
 			Assert::AreEqual(unsigned char(4), robot.GetPosY());
-			robot.MoveY(false);
+			robot.RotateLeft();
+			robot.RotateLeft();
+			robot.Move();
 			Assert::AreEqual(unsigned char(3), robot.GetPosY());
-			robot.MoveY(false);
+			robot.Move();
 			Assert::AreEqual(unsigned char(2), robot.GetPosY());
-			robot.MoveY();
+			robot.RotateLeft();
+			robot.RotateLeft();
+			robot.Move();
 			Assert::AreEqual(unsigned char(3), robot.GetPosY());
 		}
 
-		TEST_METHOD(MoveY_Limit_Max)
+		TEST_METHOD(Move_Y_Limit_Max)
 		{
-			Robot robot(0xff, 0xff, FacingOrientation::WEST);
-			robot.MoveY();
+			Entity robot(0xff, 0xff, FacingOrientation::NORTH);
+			robot.Move();
 			Assert::AreEqual(unsigned char(0), robot.GetPosY());
 		}
 
-		TEST_METHOD(MoveY_Limit_Min)
+		TEST_METHOD(Move_Y_Limit_Min)
 		{
-			Robot robot(0, 0, FacingOrientation::WEST);
-			robot.MoveY(false);
+			Entity robot(0, 0, FacingOrientation::SOUTH);
+			robot.Move();
 			Assert::AreEqual(unsigned char(0xff), robot.GetPosY());
 		}
 		#pragma endregion
 
+	};
+	TEST_CLASS(PLATFORM)
+	{
+	public:
+		TEST_METHOD(ValidSize)
+		{
+			Platform table;
+			Assert::AreEqual(true, table.SetSize(1, 4));
+
+			unsigned char uTilesX = 0;
+			unsigned char uTilesY = 0;
+
+			table.GetSize(uTilesX, uTilesY);
+			Assert::AreEqual(unsigned char(1), uTilesX);
+			Assert::AreEqual(unsigned char(4), uTilesY);
+		}
+
+		TEST_METHOD(InvalidSize)
+		{
+			Platform table;
+			Assert::AreEqual(false, table.SetSize(0, 0));
+
+			unsigned char uTilesX = 1;
+			unsigned char uTilesY = 2;
+
+			table.GetSize(uTilesX, uTilesY);
+			Assert::AreEqual(unsigned char(0), uTilesX);
+			Assert::AreEqual(unsigned char(0), uTilesY);
+		}
+
+		TEST_METHOD(NoSize)
+		{
+			Platform table;
+
+			unsigned char uTilesX = 1;
+			unsigned char uTilesY = 2;
+
+			table.GetSize(uTilesX, uTilesY);
+			Assert::AreEqual(unsigned char(0), uTilesX);
+			Assert::AreEqual(unsigned char(0), uTilesY);
+		}
 	};
 }

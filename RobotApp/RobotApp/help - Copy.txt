@@ -1,0 +1,15 @@
+-List of Commands-
+
+PLACE x,y,facing	Place the robot in 'x','y' coordinate 'facing' in certain direction (north,south,east,west)
+REPORT			Displays the current location and orientation of the robot
+MOVE			Robot will step forward depending on where it is facing
+LEFT			Rotates the robot to its left
+RIGHT			Rotates the robot to its right
+
+-End of Commands-
+
+Additional Info:
+ Table where the robot is place have only 5x5 tiles
+ Movement or placement that will make the robot fall will be ignored
+ Invalid commands will be ignored
+ Movement commands (MOVE, LEFT, and RIGHT) will be ignored if no robot is placed in the table

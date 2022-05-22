@@ -3,29 +3,40 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
+
+#include "CommandHandler.h"
 
 using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
-    std::cout << "Hello World!\n";
-    while (1) {
-       string fullName;
-       cout << "Type your full name: ";
-       getline(cin, fullName);
-       cout << "Your name is: " << fullName;
-       cout << "\n";
-       cout << -2%4;
-    }
+   if (argc < 2) {
+      std::cout << "Robot on the Table\n";
+      std::cout << "------------------\n";
+      while (CommandHandler::getInstance().ToContinue()) {
+         string strUserInput;
+         getline(cin, strUserInput);
+
+         CommandHandler::getInstance().Interpret(strUserInput);
+      }
+   } else {
+
+      std::ifstream file(argv[1]);
+      if (!file.is_open()) {
+         std::cout << "File not found" << std::endl;
+         return -1;
+      }
+      std::cout << "Robot on the Table\n";
+      std::cout << "------------------\n";
+      std::string strLine;
+      while (CommandHandler::getInstance().ToContinue() && 
+         std::getline(file, strLine))
+      {
+         std::cout << strLine << "\n";;
+         CommandHandler::getInstance().Interpret(strLine);
+      }
+   }
+
+   return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

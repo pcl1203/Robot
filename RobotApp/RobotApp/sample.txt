@@ -1,0 +1,22 @@
+place 1, 2, north
+report
+move
+report
+right
+report
+move
+report
+right
+report
+right
+report
+move
+report
+left
+report
+move
+report
+move
+report
+ignored
+report
