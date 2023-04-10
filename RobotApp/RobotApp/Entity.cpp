@@ -3,49 +3,43 @@
 #include "Entity.h"
 
 Entity::Entity(unsigned char _uPosX, unsigned char _uPosY, FacingOrientation _Orientation)
-   : orientation(_Orientation)
-   , uPosX(_uPosX)
-   , uPosY(_uPosY)
 {
-
+	currPosition.x = _uPosX;
+	currPosition.y = _uPosY;
+	currLocation = ExtractOrientation(ConvertOrientationToString(_Orientation));
 }
 
 #pragma region STATUS
 unsigned char Entity::GetPosX()
 {
-   return uPosX;
+   return currPosition.x;
 }
 
 unsigned char Entity::GetPosY()
 {
-   return uPosY;
+   return currPosition.y;
 }
 
-FacingOrientation Entity::GetOrientation()
+std::string Entity::GetOrientation()
 {
-   return orientation;
+	return currLocation->faced;
 }
 #pragma endregion
 
 
 #pragma region MOVEMENTS
-FacingOrientation Entity::RotateRight()
+void Entity::RotateRight()
 {
-   orientation = RotateCW(orientation);
-   return orientation;
+	currLocation = currLocation->cw;
 }
 
-FacingOrientation Entity::RotateLeft()
+void Entity::RotateLeft()
 {
-   orientation = RotateCCW(orientation);
-   return orientation;
+	currLocation = currLocation->ccw;
 }
 
-void Entity::Move()
+void Entity::Move(Platform& p)
 {
-   if (orientation == FacingOrientation::EAST) uPosX++;
-   else if (orientation == FacingOrientation::WEST) uPosX--;
-   else if (orientation == FacingOrientation::NORTH) uPosY++;
-   else if (orientation == FacingOrientation::SOUTH) uPosY--;
+	currLocation->fwd(&currPosition, p);
 }
 #pragma endregion
