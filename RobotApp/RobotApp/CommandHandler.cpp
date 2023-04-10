@@ -82,29 +82,18 @@ bool CommandHandler::Report(string)
    std::cout << "Robot Placement: ";
    std::cout << (int)Robot->GetPosX() << ", ";
    std::cout << (int)Robot->GetPosY() << ", ";
-   std::cout << ConvertOrientationToString(Robot->GetOrientation()) << "\r\n";
+   std::cout << Robot->GetOrientation() << "\r\n";
 
    return true;
 }
 
 bool CommandHandler::Move(string)
 {
-   if (!bPlace) return false;
-   unsigned char uCoordX = Robot->GetPosX();
-   unsigned char uCoordY = Robot->GetPosY();
-   FacingOrientation faced = Robot->GetOrientation();
+    if (!bPlace) return false;
 
-   switch (faced)
-   {
-      case FacingOrientation::NORTH: if (uCoordY < (TABLE_TILES_WIDTH - 1)) Robot->Move(); break;
-      case FacingOrientation::EAST: if (uCoordX < (TABLE_TILES_LENGTH - 1)) Robot->Move(); break;
-      case FacingOrientation::SOUTH: if (uCoordY > 0) Robot->Move(); break;
-      case FacingOrientation::WEST: if (uCoordX > 0) Robot->Move(); break;
-      default:
-         return false;
-   }
+    Robot->Move(Table);
 
-   return true;
+    return true;
 }
 
 bool CommandHandler::Interpret(string strIn)
