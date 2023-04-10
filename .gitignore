@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/RobotApp/RobotApp/x64/Debug
+/RobotApp/.vs/RobotApp
+/.vs
+/RobotApp/Test_Project/x64/Debug
+/RobotApp/x64/Debug
